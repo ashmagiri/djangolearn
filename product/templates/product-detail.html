@@ -1,0 +1,70 @@
+{% extends "layout.html" %}{% load static %}
+{% load widget_tweaks %}
+{%block content%}
+
+<div class="row"> 
+    <div class="col-md-6">
+        <img src="{% if product.feature_image %}{{product.feature_image.url}} {%endif%} " class="img-fluid" />
+    </div>
+    <div class="col-md-6">
+        <h4 class="text-custom">{{product.name}}</h4>
+        <p>
+            {{product.description}}
+        </p>
+        <p>
+            Category: {{product.category}}
+        </p>
+        <strong>${{product.price}}</strong><br>
+        {% for message in messages %}
+        {{message}}
+        {%endfor%}
+        <h4 class="mt-4">Shipping Details</h4>
+        <form method="POST" action="{% url 'save-customer-order' %}">
+            {%csrf_token%}
+            <input type="hidden" name="product", value="{{product.id}}" />
+            <div id="field1">
+                <button type="button" id="sub" class="sub">-</button>
+                <input name= "quantity" type="text" value="1" min="1" max="10" />
+                <button type="button" id="add" class="add">+</button>
+            </div>
+    
+            <div class="form-group mt-4">
+                <label>Name: </label>
+                {% render_field form.name class="form-control" %}
+    
+            </div>
+            <div class="form-group mt-4">
+                <label>Email: </label>
+                {% render_field form.email class="form-control" %}
+    
+            </div>
+            <div class="form-group mt-4">
+                <label>Address: </label>
+                {% render_field form.address class="form-control" %}
+    
+            </div>
+            <div class="form-group mt-4">
+                <label>Phone: </label>
+                {% render_field form.phone class="form-control" %}
+    
+            </div>
+
+            <button type= "submit" class= "btn btn-primary mt-4">
+                Buy Now 
+            </button>
+            </form> 
+    </div>
+</div>
+<script>
+    $('.add').click(function () {
+		if ($(this).prev().val() < 10) {
+    	$(this).prev().val(+$(this).prev().val() + 1);
+		}
+});
+$('.sub').click(function () {
+		if ($(this).next().val() > 1) {
+    	if ($(this).next().val() > 1) $(this).next().val(+$(this).next().val() - 1);
+		}
+});
+</script>
+{%endblock%}
